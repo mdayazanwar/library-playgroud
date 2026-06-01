@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package library.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.library.v1";
+
+message Publisher {
+  option (google.api.resource) = {
+    type: "library.googleapis.com/Publisher"
+    pattern: "publishers/{publisher}"
+    singular: "publisher"
+    plural: "publishers"
+  };
+
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER
+  ];
+
+  string display_name = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string website = 3;
+
+  string contact_email = 4;
+
+  string address = 5;
+}

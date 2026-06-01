@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package library.v1;
+
+import "book.proto";
+import "library.proto";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.library.v1";
+
+service LibraryService {
+
+  rpc GetBook(GetBookRequest) returns (Book) {
+    option (google.api.http) = {
+      get: "/v1/{name=libraries/*/books/*}"
+    };
+  }
+
+  rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {
+    option (google.api.http) = {
+      get: "/v1/{parent=libraries/*}/books"
+    };
+  }
+
+  rpc CreateBook(CreateBookRequest) returns (Book) {
+    option (google.api.http) = {
+      post: "/v1/{parent=libraries/*}/books"
+      body: "book"
+    };
+  }
+
+  rpc UpdateBook(UpdateBookRequest) returns (Book) {
+    option (google.api.http) = {
+      patch: "/v1/{book.name=libraries/*/books/*}"
+      body: "book"
+    };
+  }
+
+  rpc DeleteBook(DeleteBookRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/{name=libraries/*/books/*}"
+    };
+  }
+}
+
+message GetBookRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "library.googleapis.com/Book"
+    }
+  ];
+}
+
+message ListBooksRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type: "library.googleapis.com/Library"
+    }
+  ];
+
+  int32 page_size = 2;
+
+  string page_token = 3;
+}
+
+message ListBooksResponse {
+  repeated Book books = 1;
+
+  string next_page_token = 2;
+}
+
+message CreateBookRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string book_id = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  Book book = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message UpdateBookRequest {
+  Book book = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message DeleteBookRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}

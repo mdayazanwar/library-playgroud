@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package library.v1;
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.library.v1";
+
+message Book {
+  option (google.api.resource) = {
+    type: "library.googleapis.com/Book"
+    pattern: "libraries/{library}/books/{book}"
+    singular: "book"
+    plural: "books"
+  };
+
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER
+  ];
+
+  string title = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string isbn = 3;
+
+  string description = 4;
+
+  int32 publication_year = 5;
+
+  string genre = 6;
+
+  bool available = 7;
+
+  repeated string authors = 8 [
+    (google.api.resource_reference) = {
+      type: "library.googleapis.com/Author"
+    }
+  ];
+
+  string publisher = 9 [
+    (google.api.resource_reference) = {
+      type: "library.googleapis.com/Publisher"
+    }
+  ];
+}
